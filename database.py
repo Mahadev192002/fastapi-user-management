@@ -19,6 +19,6 @@ class Base(DeclarativeBase):
     pass
 
 
-async def get_db():
-    async with AsyncSessionLocal() as session:
-        yield session
+async def get_db(): # Define an asynchronous generator function to provide a database session for dependency injection in FastAPI routes
+    async with AsyncSessionLocal() as session: # Create an asynchronous context manager to manage the lifecycle of the database session
+        yield session # Yield the session to the caller, allowing it to be used in FastAPI route handlers, and automatically close the session when done
