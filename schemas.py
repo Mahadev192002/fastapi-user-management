@@ -10,7 +10,15 @@ class UserBase(BaseModel): # Base Pydantic model for user data, used as a base f
 
 
 class UserCreate(UserBase):  # Pydantic model for creating a new user, inherits from UserBase and can be extended with additional fields if needed
-    pass 
+    password : str = Field(min_length=6) 
+
+class UserPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    username: str
+    image_file: str | None
+    image_path: str
 
 
 class UserResponse(UserBase): # Pydantic model for responding with user information, inherits from UserBase and includes additional fields for the response
@@ -20,13 +28,20 @@ class UserResponse(UserBase): # Pydantic model for responding with user informat
     image_file: str | None  # Image file field for the user's profile picture, can be None if the user has not uploaded a profile picture
     image_path: str # Image path field for the user's profile picture, included in the response and generated from the image_file field
     
+
+class UserPrivate(UserPublic):
+    email: EmailStr
     
       
 class UserUpdate(BaseModel): # Pydantic model for updating user information, used for validating data when updating a user's profile, with all fields optional to allow partial updates
     username: str | None = Field(default=None, min_length=1, max_length=50)
     email: EmailStr | None = Field(default=None, max_length=120)
     image_file: str | None = Field(default=None, min_length=1, max_length=200)
+    
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
 class PostBase(BaseModel):  # Base Pydantic model for post data, used as a base for creating and responding with post information
     title: str = Field(min_length=1, max_length=100)
@@ -34,7 +49,7 @@ class PostBase(BaseModel):  # Base Pydantic model for post data, used as a base 
 
 
 class PostCreate(PostBase): # Pydantic model for creating a new post, inherits from PostBase and can be extended with additional fields if needed
-    user_id: int  # TEMPORARY
+    pass
 
 class PostUpdate(BaseModel): # Pydantic model for updating post information, used for validating data when updating a post, with all fields optional to allow partial updates
     title: str | None = Field(default=None, min_length=1, max_length=100)

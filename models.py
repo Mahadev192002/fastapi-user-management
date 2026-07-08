@@ -14,6 +14,7 @@ class User(Base):  # Define User model that inherits from Base, representing the
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True) # Define id column as an integer primary key with indexing for faster queries
     username: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    password_hash: Mapped[str] = mapped_column(String(200), nullable=False)
     image_file: Mapped[str | None] = mapped_column( # Define image_file column as a string that can be null, used to store the filename of the user's profile picture
         String(200),
         nullable=True,

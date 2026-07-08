@@ -78,7 +78,7 @@ async def post_page(
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
 
 
-@app.get("/users/{user_id}/posts", include_in_schema=False, name="user_posts") #Define a route to display all posts by a specific user, using the user's ID as a path parameter
+@app.get("/users/{user_id}/posts", include_in_schema=False, name="user_posts")
 async def user_posts_page(
     request: Request,
     user_id: int,
@@ -103,6 +103,33 @@ async def user_posts_page(
         "user_posts.html",
         {"posts": posts, "user": user, "title": f"{user.username}'s Posts"},
     )
+
+
+@app.get("/login", include_in_schema=False)
+async def login_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "login.html",
+        {"title": "Login"},
+    )
+
+
+@app.get("/register", include_in_schema=False)
+async def register_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "register.html",
+        {"title": "Register"},
+    )
+    
+    
+@app.get("/account", include_in_schema=False)
+async def account_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "account.html",
+        {"title": "Account"},
+        )
 
 
 @app.exception_handler(StarletteHTTPException)
