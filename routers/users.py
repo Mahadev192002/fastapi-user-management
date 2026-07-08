@@ -1,11 +1,15 @@
 from datetime import timedelta
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+
+from starlette.concurrency import run_in_threadpool
+from PIL import UnidentifiedImageError
+from image_utils import delete_profile_image, process_profile_image
 
 import models
 
@@ -215,3 +219,7 @@ async def delete_user(user_id: int,
      
     await db.delete(user)
     await db.commit()
+    
+    
+    
+    
