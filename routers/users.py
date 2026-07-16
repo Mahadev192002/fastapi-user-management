@@ -107,11 +107,6 @@ async def get_current_user(current_user: CurrentUser):
     return current_user
 
 
-
-
-
-
-
 @router.get("/{user_id}", response_model=UserResponse)
 async def get_user(user_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
     result = await db.execute(select(models.User).where(models.User.id == user_id))
