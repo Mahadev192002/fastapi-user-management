@@ -62,3 +62,11 @@ class PostResponse(PostBase): # Pydantic model for responding with post informat
     user_id: int # User ID field for the post, included in the response to indicate which user created the post
     date_posted: datetime # Date posted field for the post, included in the response to indicate when the post was created
     author: UserResponse    # Author field for the post, included in the response and represented as a nested UserResponse model to provide information about the author of the post
+    
+class PaginatedPostsResponse(BaseModel):
+    posts: list[PostResponse]
+    total: int
+    skip: int
+    limit: int
+    has_more: bool
+
