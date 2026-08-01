@@ -15,8 +15,8 @@ class Settings(BaseSettings): # Pydantic model for application settings,
     
     max_upload_size_bytes: int = 5 * 1024 * 1024 # Maximum upload size for files in bytes, with a default value of 5 MB
     
-    get_post : int = 10
-    get_user_post : int = 5
+    # get_post : int = 10
+    posts_per_user: int = 5
     posts_per_page : int = 10
     
 

@@ -128,7 +128,7 @@ async def get_user_posts(
     user_id: int,
     db: Annotated[AsyncSession, Depends(get_db)],
     skip: Annotated[int, Query(ge=0)] = 0,  # ge = greater then or equal to one, le = less then or equal to one
-    limit: Annotated[int, Query(ge=1, le=100)] = settings.get_user_post,
+    limit: Annotated[int, Query(ge=1, le=100)] = settings.posts_per_user
 ):
     result = await db.execute(select(models.User).where(models.User.id == user_id))
     user = result.scalars().first()

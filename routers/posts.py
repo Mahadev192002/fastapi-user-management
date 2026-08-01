@@ -19,7 +19,7 @@ router = APIRouter()
 async def get_posts(
     db: Annotated[AsyncSession, Depends(get_db)],
     skip: Annotated[int, Query(ge=0)] = 0,
-    limit: Annotated[int, Query(ge=1, le=100)] = settings.get_post,
+    limit: Annotated[int, Query(ge=1, le=100)] = settings.posts_per_page,
 ):
 
     count_result = await db.execute(select(func.count()).select_from(models.Post))
@@ -35,6 +35,8 @@ async def get_posts(
     posts = result.scalars().all()
 
     has_more = skip + len(posts) < total
+    # has_more = 10 + 44 < 44 (return false if the number of posts returned is less than the total number of posts in the database)
+    
 
     return PaginatedPostsResponse(
         posts=[PostResponse.model_validate(post) for post in posts],
@@ -43,7 +45,6 @@ async def get_posts(
         limit=limit,
         has_more=has_more,
     )
-
 
 @router.get("/{post_id}", response_model=PostResponse)
 async def get_post(post_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
