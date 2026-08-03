@@ -1,16 +1,7 @@
 from datetime import UTC, datetime, timedelta
 from typing import Annotated
-
-
-
-# from typing import Annoteted
-# from fastapi import Depends,HTTPException,status
-# from sqlalchemy import select 
-# from sqlalchemy.ext.asyncio import AsyncSession 
-
-# import models
-# from config import Settings
-# from database import get_db
+import hashlib
+import secrets
 
 
 import jwt
@@ -36,6 +27,11 @@ def hash_password(password: str) -> str: # Hash a plain password using the recom
 def verify_password(plain_password: str, hashed_password: str) -> bool: # Verify a plain password against a hashed password and return True if they match, False otherwise
     return password_hash.verify(plain_password, hashed_password)
 
+def generate_reset_token() -> str: # Generate a secure random token for password reset and return it as a hexadecimal string
+    return secrets.token_urlsafe(32)
+
+def hash_reset_token(token : str) -> str: # Hash a password reset token using SHA-256 and return the hexadecimal representation of the hash
+    return hashlib.sha256(token.encode()).hexdigest()
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
     """Create a JWT access token."""

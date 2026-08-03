@@ -62,3 +62,28 @@ class PostResponse(PostBase): # Pydantic model for responding with post informat
     user_id: int # User ID field for the post, included in the response to indicate which user created the post
     date_posted: datetime # Date posted field for the post, included in the response to indicate when the post was created
     author: UserResponse    # Author field for the post, included in the response and represented as a nested UserResponse model to provide information about the author of the post
+
+class PaginatedPostsResponse(BaseModel):
+    posts: list[PostResponse]
+    total: int
+    skip: int
+    limit: int
+    has_more: bool
+
+# this model is used to validate the request body for initiating a password reset process. It includes a single field 'email', which is a string representing the user's email address. The 'email' field has a maximum length validation of 120 characters to ensure it adheres to typical email length constraints. This model is typically used in an endpoint where users can request a password reset by providing their registered email address. 
+class ForgotPasswordRequest(BaseModel):
+    email : EmailStr = Field(max_length = 120)
+    
+# this model is used to validate the request body for initiating a password reset process. It includes a single field 'email', which is a string representing the user's email address. The 'email' field has a maximum length validation of 120 characters to ensure it adheres to typical email length constraints. This model is typically used in an endpoint where users can request a password reset by providing their registered email address.   
+class ResetPasswordRequest(BaseModel):
+    token : str 
+    new_password : str =Field(min_length = 8 )
+
+# this model is used to validate the request body for resetting a user's password. It includes two fields: 'token', which is a string representing the reset token sent to the user's email, and 'new_password', which is a string representing the new password that the user wants to set. The 'new_password' field has a minimum length validation of 8 characters to ensure password strength. 
+class ResetPasswordResponse(BaseModel):
+    current_password : str
+    new_password :str = Field(min_length = 8)
+    
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str = Field(min_length=8)
