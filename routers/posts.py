@@ -35,8 +35,6 @@ async def get_posts(
     posts = result.scalars().all()
 
     has_more = skip + len(posts) < total
-    # has_more = 10 + 44 < 44 (return false if the number of posts returned is less than the total number of posts in the database)
-    
 
     return PaginatedPostsResponse(
         posts=[PostResponse.model_validate(post) for post in posts],
@@ -45,6 +43,28 @@ async def get_posts(
         limit=limit,
         has_more=has_more,
     )
+
+
+@router.post(
+    "",
+    response_model=PostResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_post(
+    post: PostCreate,
+    current_user: CurrentUser,
+    db: Annotated[AsyncSession, Depends(get_db)],
+):
+    new_post = models.Post(
+        title=post.title,
+        content=post.content,
+        user_id=current_user.id,
+    )
+    db.add(new_post)
+    await db.commit()
+    await db.refresh(new_post, attribute_names=["author"])
+    return new_post
+
 
 @router.get("/{post_id}", response_model=PostResponse)
 async def get_post(post_id: int, db: Annotated[AsyncSession, Depends(get_db)]):

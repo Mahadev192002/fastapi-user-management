@@ -13,6 +13,11 @@ class Settings(BaseSettings): # Pydantic model for application settings,
     algorithm: str = "HS256" # Algorithm used for cryptographic operations, such as signing JWT tokens, with a default value of "HS256"
     access_token_expire_minutes: int = 30 # Expiration time for access tokens in minutes, with a default value of 30 minutes
     
+    max_upload_size_bytes: int = 5 * 1024 * 1024
+    
+    posts_per_user : int = 5
+    posts_per_page: int = 10
+        
     reset_token_expire_minutes : int = 60 
     
     mail_server: str = "localhost"
