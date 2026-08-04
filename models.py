@@ -20,8 +20,16 @@ class User(Base):  # Define User model that inherits from Base, representing the
         nullable=True,
         default=None,
     )
-
-    posts: Mapped[list[Post]] = relationship(back_populates="author")
+    # Define a relationship to the Post model, allowing access to the posts created by the user through the posts attribute. The back_populates parameter establishes a bidirectional relationship with the author attribute in the Post model. The cascade option ensures that when a user is deleted, all their associated posts are also deleted.
+    posts: Mapped[list[Post]] = relationship(
+        back_populates="author",
+        cascade="all, delete-orphan",
+    )
+    # Define a relationship to the PasswordResetToken model, allowing access to the password reset tokens associated with the user through the reset_tokens attribute. The back_populates parameter establishes a bidirectional relationship with the user attribute in the PasswordResetToken model. The cascade option ensures that when a user is deleted, all their associated password reset tokens are also deleted.
+    reset_tokens: Mapped[list[PasswordResetToken]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
 
     @property  # Define a property method to generate the image path for the user's profile picture based on the image_file field
     def image_path(self) -> str:
@@ -47,3 +55,21 @@ class Post(Base): # Define Post model that inherits from Base, representing the 
     )
 
     author: Mapped[User] = relationship(back_populates="posts") # Define a relationship to the User model, allowing access to the author of the post through the author attribute
+    
+    
+class PasswordResetToken(Base):
+    __tablename__ = "password_reset_tokens"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    token_hash: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(UTC),
+    )
+
+    user: Mapped[User] = relationship(back_populates="reset_tokens")
