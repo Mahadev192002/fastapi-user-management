@@ -9,7 +9,9 @@ class Settings(BaseSettings): # Pydantic model for application settings,
         env_file_encoding="utf-8",
     ) # Configuration to specify the .env file and its encoding for loading environment variables
     
-    database_url: str
+    
+    database_url : str # Database connection URL, loaded from environment variables
+    
     
     secret_key: SecretStr # Secret key used for cryptographic operations, such as signing JWT tokens, loaded from environment variables
     algorithm: str = "HS256" # Algorithm used for cryptographic operations, such as signing JWT tokens, with a default value of "HS256"
