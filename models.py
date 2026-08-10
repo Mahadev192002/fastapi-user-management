@@ -6,6 +6,8 @@ from sqlalchemy import DateTime, ForeignKey, Integer, String, Text # Import nece
 from sqlalchemy.orm import Mapped, mapped_column, relationship # Import necessary classes and functions from SQLAlchemy for defining database models and relationships
 
 from database import Base   # Import Base class from database.py to use as a base for SQLAlchemy models
+
+from config import settings  # Import settings from config.py to access application configuration values, such as database URL and S3 settings
  
 
 class User(Base):  # Define User model that inherits from Base, representing the users table in the database
@@ -34,9 +36,9 @@ class User(Base):  # Define User model that inherits from Base, representing the
     @property  # Define a property method to generate the image path for the user's profile picture based on the image_file field
     def image_path(self) -> str:
         if self.image_file:
-            return f"/media/profile_pics/{self.image_file}"
+            return  f"https://{settings.s3_bucket_name}.s3.{settings.s3_region}.amazonaws.com/profile_pics/{self.image_file}"     #(when we are stroing the files in local storege like disk)f"/media/profile_pics/{self.image_file}"
         return "/static/profile_pics/default.jpg"
-
+ 
 
 class Post(Base): # Define Post model that inherits from Base, representing the posts table in the database
     __tablename__ = "posts"

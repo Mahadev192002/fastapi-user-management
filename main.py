@@ -34,7 +34,7 @@ async def lifespan(_app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/media", StaticFiles(directory="media"), name="media")
+# app.mount("/media", StaticFiles(directory="media"), name="media") # Bcz we are storing the files in S3, we don't need to serve them from local storage anymore. Instead, we can generate the S3 URLs for the profile pictures in the User model's image_path property. 
 
 templates = Jinja2Templates(directory="templates")
 
