@@ -20,6 +20,12 @@ from routers import posts, users
 
 from config import settings
 
+import asyncio
+
+# if hasattr(asyncio, "WindowsSelectorEventLoopPolicy"):
+#     asyncio.set_event_loop_policy(
+#         asyncio.WindowsSelectorEventLoopPolicy()
+#     )
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
