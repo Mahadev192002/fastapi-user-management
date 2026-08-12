@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from httpx import AsyncClient
 
-from test_helpers import auth_header, create_test_user, login_user
+from test.test_helpers import auth_header, create_test_user, login_user
 
 
 @pytest.mark.anyio
