@@ -20,6 +20,12 @@ from routers import posts, users
 
 from config import settings
 
+import asyncio
+
+# if hasattr(asyncio, "WindowsSelectorEventLoopPolicy"):
+#     asyncio.set_event_loop_policy(
+#         asyncio.WindowsSelectorEventLoopPolicy()
+#     )
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
@@ -34,7 +40,7 @@ async def lifespan(_app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/media", StaticFiles(directory="media"), name="media")
+# app.mount("/media", StaticFiles(directory="media"), name="media") # Bcz we are storing the files in S3, we don't need to serve them from local storage anymore. Instead, we can generate the S3 URLs for the profile pictures in the User model's image_path property. 
 
 templates = Jinja2Templates(directory="templates")
 
@@ -165,6 +171,26 @@ async def account_page(request: Request):
         "account.html",
         {"title": "Account"},
         )
+    
+@app.get("/forgot-password", include_in_schema=False)
+async def forgot_password_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "forgot_password.html",
+        {"title": "Forgot Password"},
+    )
+
+
+@app.get("/reset-password", include_in_schema=False)
+async def reset_password_page(request: Request):
+    response = templates.TemplateResponse(
+        request,
+        "reset_password.html",
+        {"title": "Reset Password"},
+    )
+    response.headers["Referrer-Policy"] = "no-referrer"
+    return response
+
 
 
 @app.exception_handler(StarletteHTTPException)
