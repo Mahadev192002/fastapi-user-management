@@ -105,3 +105,6 @@ async def get_current_user(
 
 CurrentUser = Annotated[models.User, Depends(get_current_user)] # Define a type alias for the current user, 
 # which is an instance of the User model obtained from the get_current_user dependency
+
+
+# "hi my name is Mahadeva"
